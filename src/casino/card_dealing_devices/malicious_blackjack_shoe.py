@@ -1,9 +1,9 @@
-from core.card import Card
-from core.card import Pip
-from card_dealing_devices.shoe import Shoe
-
 import random
 from typing import Iterable, Any, List
+
+from casino.core.card import Card, Pip
+from casino.card_dealing_devices.shoe import Shoe
+
 
 class MaliciousBlackJackShoe(Shoe):
 
@@ -19,27 +19,27 @@ class MaliciousBlackJackShoe(Shoe):
             low_card_pips, middle_card_pips, high_card_pips
         ]
 
-        cards = self._deck.get_cards()
-        card_groups = [
+        cards: List[Card] = self._deck.get_cards()
+        card_groups: List[List[Card]] = [
             [card for card in cards if card.pip in pip_group] 
             for pip_group in pip_groups
         ]
         for group in card_groups:
             self._rng.shuffle(group)
         
-        partitioned_card_groups = [
+        partitioned_card_groups: List[List[List[Card]]] = [
             MaliciousBlackJackShoe._partition(group, self.num_groups) 
             for group in card_groups
         ]
 
-        merged_partitions = [
+        merged_partitions: List[List[Card]] = [
             MaliciousBlackJackShoe._merge(groups)
             for groups in zip(partitioned_card_groups)
         ]
         for partition in merged_partitions:
             self._rng.shuffle(partition)
 
-        malicious_cards = MaliciousBlackJackShoe._merge(merged_partitions)
+        malicious_cards: List[Card] = MaliciousBlackJackShoe._merge(merged_partitions)
         self._deck.stack(malicious_cards)
 
     @staticmethod

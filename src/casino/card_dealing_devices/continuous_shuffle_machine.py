@@ -1,5 +1,5 @@
-from core.card import Card
-from card_dealing_devices.card_dealing_device import CardDealingDevice
+from casino.core.card import Card
+from casino.card_dealing_devices.card_dealing_device import CardDealingDevice
 
 
 class ContinuousShuffleMachine(CardDealingDevice):

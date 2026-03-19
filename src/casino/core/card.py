@@ -5,60 +5,47 @@ from enum import Enum
 from functools import total_ordering
 
 
+from enum import Enum
+from functools import total_ordering
+
 @total_ordering
 class Pip(Enum):
-    """
-    Represents the rank of a playing card.
-    """
+    ACE = ("A", 1)
+    TWO = ("2", 2)
+    THREE = ("3", 3)
+    FOUR = ("4", 4)
+    FIVE = ("5", 5)
+    SIX = ("6", 6)
+    SEVEN = ("7", 7)
+    EIGHT = ("8", 8)
+    NINE = ("9", 9)
+    TEN = ("10", 10)
+    JACK = ("J", 11)
+    QUEEN = ("Q", 12)
+    KING = ("K", 13)
 
-    ACE = "A"
-    TWO = "2"
-    THREE = "3"
-    FOUR = "4"
-    FIVE = "5"
-    SIX = "6"
-    SEVEN = "7"
-    EIGHT = "8"
-    NINE = "9"
-    TEN = "10"
-    JACK = "J"
-    QUEEN = "Q"
-    KING = "K"
+    def __init__(self, symbol: str, order: int) -> None:
+        self._symbol = symbol
+        self._order = order
+
+    @property
+    def symbol(self) -> str:
+        return self._symbol
 
     @property
     def order(self) -> int:
-        order_map = {
-            Pip.ACE: 1,
-            Pip.TWO: 2,
-            Pip.THREE: 3,
-            Pip.FOUR: 4,
-            Pip.FIVE: 5,
-            Pip.SIX: 6,
-            Pip.SEVEN: 7,
-            Pip.EIGHT: 8,
-            Pip.NINE: 9,
-            Pip.TEN: 10,
-            Pip.JACK: 11,
-            Pip.QUEEN: 12,
-            Pip.KING: 13,
-        }
-        return order_map[self]
+        return self._order
 
-    def __lt__(self, other: "Pip") -> bool:
-        if not isinstance(other, Pip):
-            return NotImplemented
-        return self.order < other.order
+    def __str__(self) -> str:
+        return self._symbol
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Pip):
-            return NotImplemented
-        return self._order == other._order
+    def __repr__(self) -> str:
+        return f"Pip.{self.name}"
 
-    def __lt__(self, other: Pip) -> bool:
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, Pip):
             return NotImplemented
         return self._order < other._order
-
 
 class Suit(Enum):
     """
@@ -75,12 +62,14 @@ class Suit(Enum):
 
     @property
     def symbol(self) -> str:
-        return {
-            Suit.HEART: "♥",
-            Suit.CLUB: "♣",
-            Suit.DIAMOND: "♦",
-            Suit.SPADE: "♠",
-        }[self]
+        """Return a terminal-friendly display symbol for the suit."""
+        SUIT_SYMBOLS = {
+            "heart": "♥",
+            "club": "♣",
+            "diamond": "♦",
+            "spade": "♠",
+        }
+        return SUIT_SYMBOLS[self.value]
 
     def __str__(self) -> str:
         return self.symbol

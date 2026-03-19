@@ -1,7 +1,7 @@
 import random
 from typing import List, Optional, Iterator, Iterable
 
-from core.card import Pip, Suit, Card
+from casino.core.card import Pip, Suit, Card
 
 
 class DeckExhaustedError(Exception):
@@ -15,10 +15,10 @@ class Deck:
     The deck is internally modeled as a contiguous list with a moving index:
 
         [ dealt cards | remaining cards ]
-                       ^ index
+                      ^ index
 
     - Dealing advances the index
-    - Shuffling resets the index
+    - Shuffling permutes the cards and resets the index
     - No cards are physically removed during dealing
     """
 

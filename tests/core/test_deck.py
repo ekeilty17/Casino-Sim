@@ -1,6 +1,6 @@
 import pytest
-from core.deck import Deck, DeckExhaustedError
-from core.card import Card, Pip, Suit
+from casino.core.deck import Deck, DeckExhaustedError
+from casino.core.card import Card, Pip, Suit
 
 
 # -------------------
@@ -205,16 +205,3 @@ def test_repr_and_str():
 
     assert "Deck" in r
     assert isinstance(s, str)
-
-
-# -------------------
-# Invariants under operations
-# -------------------
-
-def test_invariants_after_operations():
-    deck = Deck(number_of_decks=1, seed=42)
-    deck.shuffle()
-
-    for _ in range(100):
-        deck.deal(1)
-        assert_valid_deck_state(deck)

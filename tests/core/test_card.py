@@ -1,6 +1,6 @@
 import pytest
 
-from core.card import Card, Pip, Suit
+from casino.core.card import Card, Pip, Suit
 
 
 def test_card_initialization():

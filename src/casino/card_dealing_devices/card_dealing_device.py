@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from core.deck import Deck
-from core.card import Card
+from casino.core.deck import Deck
+from casino.core.card import Card
 
 
 class CardDealingDevice(ABC):
