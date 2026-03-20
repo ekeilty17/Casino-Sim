@@ -1,8 +1,9 @@
 import random
 from typing import Iterable, Any, List
 
-from casino.core.card import Card, Pip
-from casino.card_dealing_devices.shoe import Shoe
+from casino.core.card import Card
+from casino.core.rank import Rank
+from casino.dealing.shoe import Shoe
 
 
 class MaliciousBlackJackShoe(Shoe):
@@ -12,17 +13,17 @@ class MaliciousBlackJackShoe(Shoe):
         # TODO: Test
         self.num_groups = 3
         
-        low_card_pips = [Pip.TWO, Pip.THREE, Pip.FOUR, Pip.FIVE, Pip.SIX]
-        middle_card_pips = [Pip.SEVEN, Pip.EIGHT, Pip.NINE]
-        high_card_pips = [Pip.TEN, Pip.JACK, Pip.QUEEN, Pip.KING, Pip.ACE]
-        pip_groups = [
-            low_card_pips, middle_card_pips, high_card_pips
+        low_card_Ranks = [Rank.TWO, Rank.THREE, Rank.FOUR, Rank.FIVE, Rank.SIX]
+        middle_card_Ranks = [Rank.SEVEN, Rank.EIGHT, Rank.NINE]
+        high_card_Ranks = [Rank.TEN, Rank.JACK, Rank.QUEEN, Rank.KING, Rank.ACE]
+        Rank_groups = [
+            low_card_Ranks, middle_card_Ranks, high_card_Ranks
         ]
 
         cards: List[Card] = self._deck.get_cards()
         card_groups: List[List[Card]] = [
-            [card for card in cards if card.pip in pip_group] 
-            for pip_group in pip_groups
+            [card for card in cards if card.Rank in Rank_group] 
+            for Rank_group in Rank_groups
         ]
         for group in card_groups:
             self._rng.shuffle(group)

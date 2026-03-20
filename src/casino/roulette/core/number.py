@@ -1,6 +1,6 @@
 from enum import Enum
 
-class RoutelletNumber(Enum):
+class RouletteNumber(Enum):
     DOUBLE_ZERO     = ("00", "green")
     ZERO            = ("0", "green")
     ONE             = ()

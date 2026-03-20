@@ -1,6 +1,5 @@
 from casino.core.card import Card
-from casino.card_dealing_devices.card_dealing_device import CardDealingDevice
-
+from casino.dealing.card_dealing_device import CardDealingDevice
 
 class ContinuousShuffleMachine(CardDealingDevice):
     """
@@ -15,8 +14,7 @@ class ContinuousShuffleMachine(CardDealingDevice):
         """
         Reset and shuffle the entire deck.
         """
-        self._deck.reset()
-        self._deck.shuffle()
+        self.fair_shuffle()
 
     def discard(self, *cards: Card) -> None:
         """

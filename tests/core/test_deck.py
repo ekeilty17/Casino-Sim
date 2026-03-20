@@ -9,10 +9,10 @@ from casino.core.card import Card, Pip, Suit
 
 def assert_valid_deck_state(deck: Deck) -> None:
     """Common invariant checks."""
-    assert deck.num_cards_dealt() + deck.num_cards_remaining() == deck.size()
+    assert deck.num_cards_dealt() + deck.num_cards_remaining() == len(deck)
     assert deck.num_cards_dealt() >= 0
     assert deck.num_cards_remaining() >= 0
-    assert len(deck.get_cards()) == deck.size()
+    assert len(deck.get_cards()) == len(deck)
 
 
 # -------------------
@@ -22,7 +22,7 @@ def assert_valid_deck_state(deck: Deck) -> None:
 def test_deck_initialization_single_deck():
     deck = Deck(number_of_decks=1)
 
-    assert deck.size() == 52
+    assert len(deck) == 52
     assert deck.num_cards_remaining() == 52
     assert deck.num_cards_dealt() == 0
     assert_valid_deck_state(deck)
@@ -31,8 +31,8 @@ def test_deck_initialization_single_deck():
 def test_deck_initialization_multiple_decks():
     deck = Deck(number_of_decks=2)
 
-    assert deck.size() == 104
-    assert deck.num_cards_remaining() == 104
+    assert len(deck) == 2*52
+    assert deck.num_cards_remaining() == 2*52
     assert deck.num_cards_dealt() == 0
     assert_valid_deck_state(deck)
 
@@ -54,7 +54,7 @@ def test_deal_cards():
 
     assert len(cards) == 5
     assert deck.num_cards_dealt() == 5
-    assert deck.num_cards_remaining() == 47
+    assert deck.num_cards_remaining() == 52 - 5
     assert_valid_deck_state(deck)
 
 
@@ -64,7 +64,7 @@ def test_deal_single_card():
 
     assert len(card) == 1
     assert deck.num_cards_dealt() == 1
-    assert deck.num_cards_remaining() == 51
+    assert deck.num_cards_remaining() == 52 - 1
 
 
 def test_deal_exhaustion():
@@ -80,7 +80,7 @@ def test_burn_cards():
     deck.burn(10)
 
     assert deck.num_cards_dealt() == 10
-    assert deck.num_cards_remaining() == 42
+    assert deck.num_cards_remaining() == 52 - 10
     assert_valid_deck_state(deck)
 
 
@@ -144,7 +144,7 @@ def test_iteration_returns_remaining_cards():
 
     remaining = list(deck)
 
-    assert len(remaining) == 42
+    assert len(remaining) == 52 - 10
     assert_valid_deck_state(deck)
 
 
@@ -161,7 +161,7 @@ def test_cut_preserves_cards():
     deck.cut(10)
 
     assert set(deck.get_cards()) == original_cards
-    assert deck.size() == 52
+    assert len(deck) == 52
     assert_valid_deck_state(deck)
 
 
@@ -205,3 +205,19 @@ def test_repr_and_str():
 
     assert "Deck" in r
     assert isinstance(s, str)
+
+
+# -------------------
+# Invariants under operations
+# -------------------
+
+def test_invariants_after_operations():
+    deck = Deck(number_of_decks=1, seed=42)
+    deck.shuffle()
+
+    for _ in range(len(deck)):
+        deck.deal(1)
+        assert_valid_deck_state(deck)
+
+    with pytest.raises(DeckExhaustedError):
+        deck.burn(1)

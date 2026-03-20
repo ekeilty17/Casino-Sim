@@ -116,8 +116,7 @@ class Shoe(CardDealingDevice):
         """
         Reset and shuffle the shoe.
         """
-        self._deck.reset()
-        self._deck.shuffle()
+        self.fair_shuffle()
 
         self._discard_tray.clear()
         self._update_cut_card()
@@ -147,8 +146,8 @@ class Shoe(CardDealingDevice):
         # Clamp to safe operational bounds (avoid 0 and 1 exactly)
         penetration = max(self._EPSILON, min(1.0 - self._EPSILON, penetration))
 
-        self._cut_card_index = int(self.size() * penetration)
+        self._cut_card_index = int(len(self._deck) * penetration)
 
         # Defensive invariant
-        if not (0 <= self._cut_card_index <= self.size()):
+        if not (0 <= self._cut_card_index <= len(self._deck)):
             raise RuntimeError("Invalid cut card index computed")

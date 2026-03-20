@@ -51,11 +51,11 @@ class Deck:
     # State
     # -------------------
 
-    def size(self) -> int:
+    def __len__(self) -> int:
         return len(self._cards)
 
     def num_cards_remaining(self) -> int:
-        return self.size() - self._index
+        return len(self) - self._index
 
     def num_cards_dealt(self) -> int:
         return self._index

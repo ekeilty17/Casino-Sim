@@ -37,13 +37,13 @@ class CardDealingDevice(ABC):
     # Deck state
     # -------------------
 
-    def size(self) -> int:
-        return self._deck.size()
+    def __len__(self) -> int:
+        return len(self._deck)
 
     def num_cards_dealt(self) -> int:
         dealt = self._deck.num_cards_dealt()
 
-        if dealt < 0 or dealt > self.size():
+        if dealt < 0 or dealt > len(self):
             raise RuntimeError("Invalid deck state: num_cards_dealt out of bounds")
 
         return dealt
@@ -51,7 +51,7 @@ class CardDealingDevice(ABC):
     def num_cards_remaining(self) -> int:
         remaining = self._deck.num_cards_remaining()
 
-        if remaining < 0 or remaining > self.size():
+        if remaining < 0 or remaining > len(self):
             raise RuntimeError("Invalid deck state: num_cards_remaining out of bounds")
 
         return remaining
@@ -83,6 +83,10 @@ class CardDealingDevice(ABC):
             raise ValueError("num_cards must be positive")
 
         self._deck.burn(num_cards)
+
+    def fair_shuffle(self) -> None:
+        self._deck.reset()
+        self._deck.shuffle()
 
     # -------------------
     # Abstract behavior
