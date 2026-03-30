@@ -1,11 +1,11 @@
 from enum import Enum
 
-class BlackJackAction(Enum):
+class Action(Enum):
     HIT         = "hit"
     STAND       = "stand"
+    SURRENDER   = "surrender"
     DOUBLE      = "double"
     SPLIT       = "split"
-    SURRENDER   = "surrender"
 
     def __str__(self):
         return self.value

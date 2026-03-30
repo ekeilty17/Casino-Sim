@@ -1,7 +1,8 @@
-from casino.core.card import Card
-from casino.dealing.card_dealing_device import CardDealingDevice
+from casino.domain import Card
 
-class ContinuousShuffleMachine(CardDealingDevice):
+from .base import DealingDevice
+
+class ContinuousShuffleMachine(DealingDevice):
     """
     A simplified Continuous Shuffle Machine (CSM) model.
 

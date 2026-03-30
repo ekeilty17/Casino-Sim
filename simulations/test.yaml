@@ -1,0 +1,32 @@
+title: Test
+seed: 1234
+players:
+  - name: Player 1
+    bankroll: 1000
+    decision_strategy: always stand
+    betting_strategy: flat
+  - name: Player 2
+    bankroll: 5000
+    decision_strategy: always stand
+    betting_strategy: flat
+  - name: Player 3
+    bankroll: 10000
+    decision_strategy: always stand
+    betting_strategy: flat
+dealing:
+  number_of_decks: 2
+  device: shoe
+  penetration: 0.8
+rules:
+  dealer_hits_soft_17: false
+  blackjack_payout: 1.5
+  double: any
+  double_after_split: true
+  resplit_aces: true
+  hit_after_split_aces: true
+  max_splits: 3
+  surrender: late
+  dealer_peak: false
+limits:
+  min_bet: 5
+  max_bet: 500

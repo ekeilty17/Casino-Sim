@@ -1,0 +1,84 @@
+.
+├── cli
+│   └── blackjack.py
+├── legacy
+│   ├── action.py
+│   ├── blackjack_table.py
+│   ├── card.py
+│   ├── hand.py
+│   ├── mathematical_odds.py
+│   ├── odds_calculator.py
+│   ├── player.py
+│   ├── players
+│   │   ├── __init__.py
+│   │   ├── basic_strategy_player.py
+│   │   ├── card_counting_player.py
+│   │   ├── human_player.py
+│   │   └── never_bust_player.py
+│   ├── shoes
+│   │   ├── __init__.py
+│   │   ├── constantly_reshuffling_shoe.py
+│   │   ├── evenly_distributed_high_cards_shoe.py
+│   │   ├── fair_shoe.py
+│   │   ├── low_running_count_shoe.py
+│   │   └── stacked_shoe.py
+│   └── simulator.py
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── simulations
+│   └── test.yaml
+├── src
+│   ├── casino
+│   │   ├── __init__.py
+│   │   ├── blackjack
+│   │   │   ├── config
+│   │   │   │   ├── dealing_config.py
+│   │   │   │   ├── player_config.py
+│   │   │   │   └── simulation_config.py
+│   │   │   ├── core
+│   │   │   │   ├── action.py
+│   │   │   │   ├── cards.py
+│   │   │   │   ├── hand.py
+│   │   │   │   ├── limits.py
+│   │   │   │   ├── result.py
+│   │   │   │   ├── rules.py
+│   │   │   │   └── spot.py
+│   │   │   ├── engine.py
+│   │   │   ├── factories
+│   │   │   │   └── dealing_device.py
+│   │   │   ├── malicious_shoe.py
+│   │   │   └── players
+│   │   │       └── never_bust.py
+│   │   ├── core
+│   │   │   ├── __init__.py
+│   │   │   ├── card.py
+│   │   │   ├── deck.py
+│   │   │   ├── dice.py
+│   │   │   ├── hand.py
+│   │   │   ├── player.py
+│   │   │   ├── rank.py
+│   │   │   └── suit.py
+│   │   ├── dealing
+│   │   │   ├── continuous_shuffle_machine.py
+│   │   │   ├── dealing_device.py
+│   │   │   └── shoe.py
+│   │   └── roulette
+│   │       ├── core
+│   │       │   ├── number.py
+│   │       │   ├── rules.py
+│   │       │   └── wheel.py
+│   │       └── engine.py
+│   └── casino.egg-info
+│       ├── dependency_links.txt
+│       ├── PKG-INFO
+│       ├── requires.txt
+│       ├── SOURCES.txt
+│       └── top_level.txt
+├── tests
+│   └── core
+│       ├── test_card.py
+│       └── test_deck.py
+└── tree.txt
+
+20 directories, 62 files

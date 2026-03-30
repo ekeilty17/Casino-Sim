@@ -1,8 +1,7 @@
-from __future__ import annotations
 from dataclasses import dataclass
 
-from casino.core.suit import Suit
-from casino.core.rank import Rank
+from casino.domain.suit import Suit
+from casino.domain.rank import Rank
 
 
 @dataclass(frozen=True, slots=True)

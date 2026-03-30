@@ -1,3 +1,4 @@
+# from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 from typing import FrozenSet, Optional
@@ -13,10 +14,16 @@ class SurrenderRule(Enum):
     EARLY = "early"
 
 @dataclass(frozen=True)
-class BlackjackRules:
+class Rules:
+    """
+    Domain value object representing blackjack game rules.
+    
+    This is an immutable value object that encapsulates all game rules
+    with proper enum types. It's constructed by the bootstrapper from
+    RulesConfig (the config DTO).
+    """
     dealer_hits_soft_17: bool
     blackjack_payout: float
-    double: DoubleRule = DoubleRule.ANY
     double_after_split: bool
     resplit_aces: bool
     hit_after_split_aces: bool
@@ -24,11 +31,12 @@ class BlackjackRules:
     dealer_peak: bool
     
     # default
+    double: DoubleRule = DoubleRule.ANY
     double_allowed_totals: FrozenSet[int] = frozenset()  # only if double=DoubleRule.SPECIFIC_TOTALS
     max_splits: Optional[int] = None
 
-
-LAS_VEGAS_STRIP_RULES = BlackjackRules(
+"""
+LAS_VEGAS_STRIP_RULES = Rules(
     dealer_hits_soft_17=False,
     blackjack_payout=1.5,
     double=DoubleRule.ANY,
@@ -40,7 +48,7 @@ LAS_VEGAS_STRIP_RULES = BlackjackRules(
     dealer_peak=False
 )
 
-LAS_VEGAS_DOWNTOWN_RULES = BlackjackRules(
+LAS_VEGAS_DOWNTOWN_RULES = Rules(
     dealer_hits_soft_17=True,
     blackjack_payout=1.5,
     double_after_split=True,
@@ -52,7 +60,7 @@ LAS_VEGAS_DOWNTOWN_RULES = BlackjackRules(
     dealer_peak=False
 )
 
-EUROPEAN_RULES = BlackjackRules(
+EUROPEAN_RULES = Rules(
     dealer_hits_soft_17=False,
     blackjack_payout=1.5,
     double=DoubleRule.SPECIFIC_TOTALS,
@@ -71,3 +79,4 @@ if __name__ == "__main__":
     print(LAS_VEGAS_DOWNTOWN_RULES)
     print()
     print(EUROPEAN_RULES)
+"""

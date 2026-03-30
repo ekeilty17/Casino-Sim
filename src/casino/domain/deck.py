@@ -1,7 +1,7 @@
 import random
 from typing import List, Optional, Iterator, Iterable
 
-from casino.core.card import Pip, Suit, Card
+from casino.domain.card import Rank, Suit, Card
 
 
 class DeckExhaustedError(Exception):
@@ -89,6 +89,12 @@ class Deck:
 
         return self._cards[start:end]
 
+    def next_card(self) -> Card:
+        """
+        Deal next card.
+        """
+        return self.deal(num_cards=1)[0]
+
     def burn(self, num_cards: int = 1) -> None:
         """
         Discard cards without returning them to the deck.
@@ -163,9 +169,9 @@ class Deck:
         cards: List[Card] = []
 
         for suit in Suit:
-            pips = reversed(Pip) if suit in {Suit.DIAMOND, Suit.SPADE} else Pip
-            for pip in pips:
-                cards.append(Card(pip, suit))
+            ranks = reversed(Rank) if suit in {Suit.DIAMOND, Suit.SPADE} else Rank
+            for rank in ranks:
+                cards.append(Card(rank, suit))
 
         return cards
 

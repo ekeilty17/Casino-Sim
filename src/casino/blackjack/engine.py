@@ -1,107 +1,159 @@
-from enum import Enum
-from typing import List
 
-from core.player import Player
-from card_dealing_devices.card_dealing_device import CardDealingDevice
-from blackjack.core.rules import BlackjackRules, SurrenderRule
-from blackjack.core.table import BlackjackTable
-from blackjack.core.hand import BlackJackHand
-from blackjack.core.action import BlackJackAction
+from typing import List, Set
 
-class BlackJackHandResult(Enum):
-    WIN     = "win"
-    LOSE    = "lose"
-    PUSH    = "push"
+from casino.dealing import DealingDevice
+from casino.blackjack.domain import (
+    Action,
+    Player,
+    PlayerHand, DealerHand, PlayerHandResult,
+    Limits,
+    Rules, SurrenderRule,
+    Spot,
+    TableState,
+)
+from casino.blackjack.betting import BettingContext
+from casino.blackjack.decision import DecisionContext, DealerDecisionStrategy
 
-    def __str__(self):
-        return self.value
-
-class BlackJackEngine:
+class Engine:
 
     def __init__(
         self,
+        dealing_device: DealingDevice,
         players: List[Player],
-        card_dealing_device: CardDealingDevice,
-        rules: BlackjackRules,
-        table: BlackjackTable,
-    ):  
+        rules: Rules,
+        limits: Limits,
+    ):
+        self.dealing_device = dealing_device
         self.players = players
-        self.card_dealing_device = card_dealing_device
         self.rules = rules
-        self.table = table
-        self.dealer = None
+        self.limits = limits
+        self.dealer_strategy = DealerDecisionStrategy()
 
         self.state = None
 
     def run(self):
-
-        bets: List[int] = self.accept_bets()
+        for player in self.players:
+            print(player)
+        print()
+        table_state = self.initialize_table_state()
+        print(table_state)
         
-        active_players: List[Player] = []
-        round_results = self.run_round(active_players)
+        return
+        table_state = self.run_round(table_state)
 
+        return
         self.payout(round_results)
 
-    def run_round(self, players: List[Player]):
-        self.deal(players)
+    def initialize_table_state(self) -> TableState:
+        spots: List[Spot] = []
+
+        # Deal to players
+        for player in self.players:
+            betting_context = BettingContext(
+                bankroll=player.bankroll,
+                min_bet=self.limits.min_bet,
+                max_bet=self.limits.max_bet,
+            )
+
+            bet = player.place_bet(context=betting_context)
+            if bet > 0:
+                initial_cards = list(self.dealing_device.deal(2))
+                hand = PlayerHand(bet=bet, cards=initial_cards)
+                spot = Spot(player=player, hands=[hand])
+                spots.append(spot)
+            else:
+                # Skip players who are not betting
+                spots.append(Spot(player=player, hands=[]))
+
+        # Deal to dealer
+        dealer_cards = list(self.dealing_device.deal(2 if self.rules.dealer_peak else 1))
+        dealer_hand = DealerHand(cards=dealer_cards)
+
+        return TableState(dealer_hand=dealer_hand, spots=spots)
+
+    def run_round(self, table_state: TableState) -> TableState:
 
         if self.rules.dealer_peak:
-            self.check_dealer_blackjack()
+            if table_state.dealer_hand.is_blackjack():
+                self.evaluate_hand_results()       # TODO better name and implement
 
-        for player in players:
-            self.player_action(self, player)
+        for spot in table_state.spots:
+            self.player_action(self, spot)          # TODO better name and implement
 
-        self.dealer_action(self)
+        self.dealer_action(self)                    # TODO better name and implement
 
-        for player in players:
-            self.determine_winner(player)
+        for spot in table_state.spots:
+            for player_hand in spot.hands:
+                self.hand_result(player_hand, self.dealer_hand)
 
+    def player_action(self, spot: Spot):
+        while all(hand.is_active for hand in spot.hands):
+            for hand in spot.hands:
+                if not hand.is_active:
+                    continue
+                
+                actions = self.get_allowed_actions(hand)
+                decision_context = DecisionContext(actions=actions)
+                action = spot.player.decision_strategy.decide(decision_context)
 
-    def accept_bets(self) -> List[int]:
-        pass
+    def dealer_action(self, table_state: TableState):
+        """
+        Execute dealer's turn using DealerDecisionStrategy.
+        Dealer draws cards until strategy says to stand or busts.
+        """
+        while not table_state.dealer_hand.is_busted():
+            # Create decision context for dealer
+            context = DecisionContext(
+                dealer_upcard=table_state.dealer_hand.get_upcard(),
+                hand=table_state.dealer_hand,
+                actions=[Action.HIT, Action.STAND],
+                dealer_hits_soft_17=self.rules.dealer_hits_soft_17
+            )
+            
+            # Get dealer's decision
+            action = self.dealer_strategy.decide(context)
+            
+            if action == Action.STAND:
+                break
+            
+            # Dealer hits - deal one card
+            cards = self.dealing_device.deal(1)
+            table_state.dealer_hand.add_card(cards[0])
 
-    def deal(self, players: List[Player]):
-        pass
-
-    def check_dealer_blackjack(self):
-        pass
-
-    def player_action(self, player: Player):
-        pass
-
-    def dealer_action(self):
-        pass
-
-    def hand_result(self, player: Player) -> BlackJackHandResult:
-        if self.dealer.hand.is_blackjack():
-            return BlackJackHandResult.LOSE
-        if self.rules.dealer_peak and player.hand.is_blackjack():
-            return BlackJackHandResult.WIN
+    def hand_result(self, player_cards: Cards, dealer_cards: Cards) -> PlayerHandResult:
+        if dealer_cards.is_blackjack():
+            return PlayerHandResult.LOSE
+        if self.rules.dealer_peak and player_cards.is_blackjack():
+            return PlayerHandResult.WIN
         
-        if player.hand.is_busted():
-            return BlackJackHandResult.LOSE
-        if self.dealer.hand.is_busted():
-            return BlackJackHandResult.WIN
+        if player_cards.is_busted():
+            return PlayerHandResult.LOSE
+        if dealer_cards.is_busted():
+            return PlayerHandResult.WIN
         
-        if self.dealer.hand == player.hand:
-            return BlackJackHandResult.PUSH
-        if self.dealer.hand > player.hand:
-            return BlackJackHandResult.LOSE
-        return BlackJackHandResult.WIN
+        if dealer_cards == player_cards:
+            return PlayerHandResult.PUSH
+        if dealer_cards > player_cards:
+            return PlayerHandResult.LOSE
+        return PlayerHandResult.WIN
 
     def payout(self, round_results):
         pass
 
-    def get_allowed_actions(self, hand: BlackJackHand):
-        allowed_actions: List[BlackJackAction] = [BlackJackAction.HIT, BlackJackAction.STAND]
+    def get_allowed_actions(self, hand: PlayerHand) -> Set[Action]:
+        allowed_actions: Set[Action] = set([Action.HIT, Action.STAND])
         
-        if len(hand) == 2:
-            allowed_actions.append(BlackJackAction.DOUBLE)
+        if hand.can_surrender() and self.rules.surrender != SurrenderRule.NEVER:
+            allowed_actions.add(Action.SURRENDER)
 
-            if self.rules.surrender != SurrenderRule.NEVER:
-                allowed_actions.append(BlackJackAction.SURRENDER)
+        if hand.can_double():
+            # TODO: check for DAS rule and aces exception
+            # TODO: also need to check if they have enough money
+            allowed_actions.add(Action.DOUBLE)
 
-            if hand.is_splittable():
-                allowed_actions.append(BlackJackAction.SPLIT)
+        if hand.can_split():
+            # TODO: check for split limit
+            # TODO: also need to check if they have enough money
+            allowed_actions.add(Action.SPLIT)
     
         return allowed_actions

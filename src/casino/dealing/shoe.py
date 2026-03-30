@@ -2,12 +2,11 @@ import math
 import random
 from typing import List, Optional
 
-from casino.core.deck import Deck
-from casino.core.card import Card
-from casino.card_dealing_devices.card_dealing_device import CardDealingDevice
+from casino.domain import Card, Deck
 
+from .base import DealingDevice
 
-class Shoe(CardDealingDevice):
+class Shoe(DealingDevice):
     """
     Models a casino-style shoe with a cut card and discard tray.
 

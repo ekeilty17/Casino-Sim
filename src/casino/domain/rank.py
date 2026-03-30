@@ -5,9 +5,6 @@ from functools import total_ordering
 class Rank(Enum):
     """
     Represents the rank of a playing card.
-
-    Value structure:
-        (name, display_symbol)
     """
 
     ACE = ("A", 1)
@@ -40,7 +37,7 @@ class Rank(Enum):
         return self._symbol
 
     def __repr__(self) -> str:
-        return f"Pip.{self.name}"
+        return f"Rank.{self._symbol}"
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Rank):

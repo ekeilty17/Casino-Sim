@@ -1,13 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from casino.core.deck import Deck
-from casino.core.card import Card
+from casino.domain import Card, Deck
 
-
-class CardDealingDevice(ABC):
+class DealingDevice(ABC):
     """
-    Abstract base class for all card dealing devices (e.g., Shoe, CSM).
+    Abstract base class for all dealing devices (e.g., Shoe, CSM).
 
     This class is intentionally minimal and delegates game-specific behavior
     (like discarding and shuffling policies) to subclasses. 
@@ -64,13 +62,18 @@ class CardDealingDevice(ABC):
         """
         Deal cards from the device.
 
-        Subclasses may override to enforce additional rules
-        (e.g., cut card behavior in a Shoe).
+        Subclasses may override to enforce additional rules.
         """
         if num_cards <= 0:
             raise ValueError("num_cards must be positive")
 
         return self._deck.deal(num_cards)
+
+    def next_card(self) -> Card:
+        """
+        Deal next card from device.
+        """
+        return self.deal(num_cards=1)[0]
 
     def burn(self, num_cards: int = 1) -> None:
         """

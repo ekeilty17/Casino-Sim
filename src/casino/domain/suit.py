@@ -3,9 +3,6 @@ from enum import Enum
 class Suit(Enum):
     """
     Represents the suit of a playing card.
-
-    Value structure:
-        (name, display_symbol)
     """
 
     HEART = "heart"

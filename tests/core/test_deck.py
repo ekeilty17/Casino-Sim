@@ -1,7 +1,5 @@
 import pytest
-from casino.core.deck import Deck, DeckExhaustedError
-from casino.core.card import Card, Pip, Suit
-
+from casino.domain.deck import Deck, DeckExhaustedError
 
 # -------------------
 # Helpers

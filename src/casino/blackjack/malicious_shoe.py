@@ -1,12 +1,12 @@
 import random
 from typing import Iterable, Any, List
 
-from casino.core.card import Card
-from casino.core.rank import Rank
+from casino.domain.card import Card
+from casino.domain.rank import Rank
 from casino.dealing.shoe import Shoe
 
 
-class MaliciousBlackJackShoe(Shoe):
+class MaliciousShoe(Shoe):
 
     def shuffle(self) -> None:
         """Implement malicious shuffle algorithm to make BlackJack unbeatable"""
@@ -29,18 +29,18 @@ class MaliciousBlackJackShoe(Shoe):
             self._rng.shuffle(group)
         
         partitioned_card_groups: List[List[List[Card]]] = [
-            MaliciousBlackJackShoe._partition(group, self.num_groups) 
+            MaliciousShoe._partition(group, self.num_groups) 
             for group in card_groups
         ]
 
         merged_partitions: List[List[Card]] = [
-            MaliciousBlackJackShoe._merge(groups)
+            MaliciousShoe._merge(groups)
             for groups in zip(partitioned_card_groups)
         ]
         for partition in merged_partitions:
             self._rng.shuffle(partition)
 
-        malicious_cards: List[Card] = MaliciousBlackJackShoe._merge(merged_partitions)
+        malicious_cards: List[Card] = MaliciousShoe._merge(merged_partitions)
         self._deck.stack(malicious_cards)
 
     @staticmethod

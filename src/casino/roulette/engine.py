@@ -2,7 +2,7 @@ import random
 from typing import List
 
 from roulette.core.number import RoutelletNumber
-from core.player import Player
+from domain.player import Player
 
 class RouletteEngine:
 
