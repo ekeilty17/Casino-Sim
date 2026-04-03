@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from typing import List, Union
+from typing import List, Union, Set
 
 from casino.domain import Card
 from casino.blackjack.domain import Action, PlayerHand, DealerHand
@@ -9,7 +9,7 @@ from casino.blackjack.domain import Action, PlayerHand, DealerHand
 class DecisionContext:
     dealer_upcard: Card
     hand: Union[PlayerHand, DealerHand]
-    actions: List[Action]
+    actions: Set[Action]
     dealer_hits_soft_17: bool
 
 class DecisionStrategy(ABC):

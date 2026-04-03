@@ -37,5 +37,3 @@ class PlayerFactory:
     def reset_counter(cls):
         """Reset the player ID counter. Useful for testing."""
         cls._player_id_counter = 0
-
-# Made with Bob

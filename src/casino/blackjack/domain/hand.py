@@ -10,6 +10,7 @@ class PlayerHandResult(Enum):
     WIN = "win"
     LOSE = "lose"
     PUSH = "push"
+    SURRENDERED = "surrendered"
 
     def __str__(self):
         return self.value
@@ -29,7 +30,10 @@ class PlayerHand:
     is_split: bool = False
     split_from_rank: Optional[Rank] = None  # Rank of cards that were split to create this hand
     is_active: bool = True
-    result: Optional[PlayerHandResult] = None
+    is_surrendered: bool = False
+
+    def __len__(self) -> int:
+        return len(self.cards)
 
     def add_card(self, card: Card) -> None:
         """Add a card to the hand"""
