@@ -32,7 +32,7 @@ class Rank(Enum):
     @property
     def order(self) -> int:
         return self._order
-
+    
     def __str__(self) -> str:
         return self._symbol
 

@@ -1,8 +1,9 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 from casino.domain.card import Card
 
 @dataclass
 class Hand:
-    cards: List[Card]
+    bet: int
+    cards: List[Card] = field(default_factory=list)

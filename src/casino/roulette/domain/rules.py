@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass(frozen=True)
-class RouletteRules:
+class Rules:
     min_bet: int
     max_bet: int

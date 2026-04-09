@@ -10,7 +10,10 @@ class DecisionContext:
     dealer_upcard: Card
     hand: Union[PlayerHand, DealerHand]
     actions: Set[Action]
+    num_decks: int
     dealer_hits_soft_17: bool
+    dealer_peak: bool
+    double_after_split: bool
 
 class DecisionStrategy(ABC):
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Any, Optional
+from typing import List
 
 from .hand import PlayerHand
 from .player import Player
@@ -14,7 +14,7 @@ class Spot:
     """
     player: Player
     hands: List[PlayerHand] = field(default_factory=list)
-    # side_bets: Optional[Any] = None      # TODO later
+    # side_bets: Any | None = None      # TODO later
 
     def split(self, hand_index: int) -> None:
         """

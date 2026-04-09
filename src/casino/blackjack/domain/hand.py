@@ -1,6 +1,5 @@
 from enum import Enum
 from dataclasses import dataclass, field
-from typing import Optional
 
 from casino.domain import Card, Rank
 from .evaluator import BlackjackEvaluator
@@ -28,7 +27,7 @@ class PlayerHand:
     cards: list[Card] = field(default_factory=list)
     is_doubled: bool = False
     is_split: bool = False
-    split_from_rank: Optional[Rank] = None  # Rank of cards that were split to create this hand
+    split_from_rank: Rank | None = None  # Rank of cards that were split to create this hand
     is_active: bool = True
     is_surrendered: bool = False
 

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass(frozen=True)
@@ -12,8 +11,8 @@ class Limits:
     LimitsConfig (the config DTO).
     """
     min_bet: int = 1
-    max_bet: Optional[int] = None
-    max_table_bet: Optional[int] = None
+    max_bet: int | None = None
+    max_table_bet: int | None = None
 
     def __post_init__(self):
         """Validate betting limits constraints."""

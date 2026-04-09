@@ -1,20 +1,18 @@
 import random
 from typing import List
 
-from roulette.core.number import RoutelletNumber
-from domain.player import Player
+from .domain import RouletteNumber, RoulettePlayer
+from .wheel import RouletteWheel
 
 class RouletteEngine:
 
     def __init__(
         self, 
-        players: List[Player]
+        players: List[RoulettePlayer],
+        wheel: RouletteWheel
     ):  
         self.players = players
-        self._wheel: List[RoutelletNumber] = [number for number in RoutelletNumber]
+        self.wheel = wheel
 
     def run(self):
         pass
-
-    def spin(self) -> RoutelletNumber:
-        return random.choice(self._wheel)

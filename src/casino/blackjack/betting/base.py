@@ -21,4 +21,4 @@ class BettingStrategy(ABC):
         Determine the wager amount for the next round.
         Must respect table limits and bankroll constraints.
         """
-        raise NotImplementedError
+        pass

@@ -107,7 +107,7 @@ class DealingDevice(ABC):
         - Continuous shuffler: reinsert into deck
         - Simple deck: ignore or track externally
         """
-        raise NotImplementedError
+        pass
 
     @abstractmethod
     def shuffle(self) -> None:
@@ -118,7 +118,7 @@ class DealingDevice(ABC):
         - Shoe: reset deck + reshuffle + reset cut card
         - CSM: may be a no-op or continuous process
         """
-        raise NotImplementedError
+        pass
 
     # -------------------
     # Optional extension points
