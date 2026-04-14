@@ -6,10 +6,6 @@ from typing import Optional, List
 class RulesConfig:
     """
     Configuration DTO for blackjack game rules.
-    
-    This is a pure data transfer object that holds validated configuration
-    without resolving to enums. The domain layer handles the conversion
-    to the Rules value object with proper enum types.
     """
     dealer_hits_soft_17: bool
     blackjack_payout: float

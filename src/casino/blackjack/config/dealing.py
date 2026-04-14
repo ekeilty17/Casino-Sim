@@ -5,10 +5,6 @@ from dataclasses import dataclass
 class DealingConfig:
     """
     Configuration DTO for dealing device setup.
-    
-    This is a pure data transfer object that holds validated configuration
-    without resolving to enums or device instances. The factory layer
-    handles the resolution of device type strings to concrete implementations.
     """
     device_type: str
     number_of_decks: int

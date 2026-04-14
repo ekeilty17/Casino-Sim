@@ -1,7 +1,7 @@
-from casino.blackjack.config.player import PlayerConfig
-from casino.blackjack.domain.player import Player
-from casino.blackjack.factories.betting_strategy import BettingStrategyFactory
-from casino.blackjack.factories.decision_strategy import DecisionStrategyFactory
+from ..config import PlayerConfig
+from ..domain import Player
+from .betting_strategy import BettingStrategyFactory
+from .decision_strategy import DecisionStrategyFactory
 
 
 class PlayerFactory:

@@ -7,7 +7,6 @@ class PlayerConfig:
     """
     name: str
     bankroll: int
-    decision_strategy: str
     betting_strategy: str
 
     @classmethod
@@ -24,6 +23,5 @@ class PlayerConfig:
         return cls(
             name=data["name"],
             bankroll=data["bankroll"],
-            decision_strategy=data["decision_strategy"],
             betting_strategy=data["betting_strategy"],
         )

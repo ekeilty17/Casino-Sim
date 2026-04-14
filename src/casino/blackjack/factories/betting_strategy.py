@@ -1,5 +1,5 @@
-from casino.blackjack.config.player import PlayerConfig
-from casino.blackjack.betting import BettingStrategy, RandomBettingStrategy, FlatBettingStrategy
+from ..config import PlayerConfig
+from ..betting import BettingStrategy, RandomBettingStrategy, FlatBettingStrategy
 
 
 class BettingStrategyFactory:

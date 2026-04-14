@@ -1,0 +1,64 @@
+title: Roulette Test
+seed: 1234
+players:
+  - name: Player 1
+    bankroll: 1000
+    betting_strategy: flat
+wheel:
+  num_zeros: 1
+  num_balls: 1
+rules:
+  la_partage: false
+  en_prison: false
+bets:
+  # inside bets
+  straight:
+    kind: straight
+    group: inside
+    odds: 35
+  split:
+    kind: split
+    group: inside
+    odds: 17
+  street:
+    kind: street
+    group: inside
+    odds: 11
+  corner:
+    kind: corner
+    group: inside
+    odds: 8
+  line:
+    kind: line
+    group: inside
+    odds: 5
+  # outside bets
+  column: 
+    kind: column
+    group: outside
+    odds: 2
+  dozen: 
+    kind: dozen
+    group: outside
+    odds: 2
+  even_odd: 
+    kind: even_odd
+    group: outside
+    odds: 1
+  red_black: 
+    kind: red_black
+    group: outside
+    odds: 1
+  high_low: 
+    kind: high_low
+    group: outside
+    odds: 1
+  # special bets
+  basket_0_1_2_3:
+    kind: fixed_set
+    group: special
+    odds: 8
+    numbers: ["0", "1", "2", "3"]
+limits:
+  min_bet: 1
+  max_bet: 1000

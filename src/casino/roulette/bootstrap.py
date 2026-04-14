@@ -1,17 +1,16 @@
 """
-Bootstrap module for initializing and running blackjack simulations.
+Bootstrap module for initializing and running roulette simulations.
 """
 
-from typing import List
+from typing import List, Dict
 
-from casino.domain.deck import Deck
-from casino.dealing import DealingDevice
+from casino.roulette.domain.bet import BetCatalog
+from casino.roulette.domain.table import RouletteTable
 
 from .config import SimulationConfig
-from .domain import Player, Rules, DoubleRule, SurrenderRule, Limits
+from .domain import RouletteWheel, Player, BetKind, BetDefinition, Bet, Rules, Limits, BetGroup, BetKind
 from .engine import Engine
-from .factories import DealingDeviceFactory, PlayerFactory
-
+from .factories import PlayerFactory, BetCatalogFactory
 
 class SimulationBootstrapper:
     """
@@ -30,41 +29,12 @@ class SimulationBootstrapper:
             config: Parsed simulation configuration
         """
         self.config = config
-        self._deck: Deck | None = None
-        self._dealing_device: DealingDevice | None = None
+        self._wheel: RouletteWheel | None = None
         self._players: List[Player] | None = None
+        self._catalog: BetCatalog | None = None
         self._rules: Rules | None = None
         self._limits: Limits | None = None
-    
-    def build_deck(self) -> Deck:
-        """
-        Create and configure the deck for the simulation.
-        
-        Returns:
-            Configured Deck instance
-        """
-        if self._deck is None:
-            self._deck = Deck(
-                number_of_decks=self.config.dealing.number_of_decks,
-                seed=self.config.seed
-            )
-        return self._deck
-    
-    def build_dealing_device(self) -> DealingDevice:
-        """
-        Create and configure the dealing device.
-        
-        Returns:
-            Configured DealingDevice instance
-        """
-        if self._dealing_device is None:
-            deck = self.build_deck()
-            self._dealing_device = DealingDeviceFactory.create_device(
-                self.config, 
-                deck
-            )
-        return self._dealing_device
-    
+
     def build_players(self) -> List[Player]:
         """
         Create all player instances from configuration.
@@ -77,34 +47,53 @@ class SimulationBootstrapper:
             PlayerFactory.reset_counter()
             
             self._players = [
-                PlayerFactory.create_player(player_config)
+                PlayerFactory.create(player_config)
                 for player_config in self.config.players
             ]
         return self._players
     
-    def build_rules(self) -> Rules:
+    def build_wheel(self) -> RouletteWheel:
         """
-        Build the game rules domain object from configuration.
+        Build the wheel domain object from configuration.
         
         Returns:
-            Rules value object with validated enums
+            RouletteWheel value object with validation
+        """
+        if self._wheel is None:
+            wheel = self.config.wheel
+            self._wheel = RouletteWheel(
+                num_balls=wheel.num_balls,
+                num_zeros=wheel.num_zeros,
+            )
+        return self._wheel
+
+    def build_catalog(self) -> BetCatalog:
+        """
+        Build the game bet catalog domain object from configuration.
+        
+        Returns:
+            BetCatalog value object with validation
+        """
+        if self._catalog is None:
+            self._catalog = BetCatalogFactory.create(self.config.bets)
+        
+        return self._catalog
+    
+    def build_rules(self) -> Rules:
+        """
+        Build the rules domain object from configuration.
+        
+        Returns:
+            Rules value object with validation
         """
         if self._rules is None:
             rules = self.config.rules
             self._rules = Rules(
-                dealer_hits_soft_17=rules.dealer_hits_soft_17,
-                blackjack_payout=rules.blackjack_payout,
-                double_after_split=rules.double_after_split,
-                resplit_aces=rules.resplit_aces,
-                hit_after_split_aces=rules.hit_after_split_aces,
-                surrender=SurrenderRule[rules.surrender.upper()],
-                dealer_peak=rules.dealer_peak,
-                double=DoubleRule[rules.double.upper()],
-                double_allowed_totals=frozenset(rules.double_allowed_totals),
-                max_splits=rules.max_splits,
+                la_partage=rules.la_partage,
+                en_prison=rules.en_prison
             )
         return self._rules
-    
+
     def build_limits(self) -> Limits:
         """
         Build the table limits domain object from configuration.
@@ -132,8 +121,10 @@ class SimulationBootstrapper:
             Fully configured Engine instance ready to run
         """
         return Engine(
-            dealing_device=self.build_dealing_device(),
-            players=self.build_players(),
+            wheel=self.build_wheel(),
+            table=RouletteTable(),
+            # players=self.build_players(),
+            catalog=self.build_catalog(),
             rules=self.build_rules(),
             limits=self.build_limits(),
         )
@@ -152,7 +143,6 @@ class SimulationBootstrapper:
             SimulationBootstrapper instance
         """
         config = SimulationConfig.from_dict(config_dict)
-        print(config)
         return cls(config)
 
 

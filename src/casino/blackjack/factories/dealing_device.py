@@ -1,7 +1,7 @@
-from casino.blackjack.config.simulation import SimulationConfig
 from casino.domain.deck import Deck
 from casino.dealing import DealingDevice, Shoe, ContinuousShuffleMachine
 
+from ..config import SimulationConfig
 
 class DealingDeviceFactory:
     """Factory for creating dealing device instances from configuration."""

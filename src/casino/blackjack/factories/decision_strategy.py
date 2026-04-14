@@ -1,6 +1,5 @@
-from casino.blackjack.config.player import PlayerConfig
 from casino.blackjack.decision import DecisionStrategy, RandomDecisionStrategy, AlwaysStandDecisionStrategy
-
+from ..config import PlayerConfig
 
 class DecisionStrategyFactory:
     """Factory for creating decision strategy instances from configuration."""

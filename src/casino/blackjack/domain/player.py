@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from casino.blackjack.decision import DecisionStrategy
-from casino.blackjack.betting import BettingStrategy
+from ..decision import DecisionStrategy
+from ..betting import BettingStrategy
 from .action import Action
 
 @dataclass

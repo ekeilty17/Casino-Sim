@@ -1,3 +1,4 @@
+from functools import total_ordering
 from enum import Enum
 from typing import Dict
 
@@ -6,9 +7,16 @@ class RouletteColor(Enum):
     BLACK = "black"
     GREEN = "green"
 
+    def __str__(self) -> str:
+        return self.value
+
+@total_ordering
 class RouletteNumber(Enum):
-    DOUBLE_ZERO     = ("00", 0,  RouletteColor.GREEN)
-    ZERO            = ("0",  0,  RouletteColor.GREEN)
+    
+    ZERO            = ("0",   0,  RouletteColor.GREEN)
+    DOUBLE_ZERO     = ("00",  0,  RouletteColor.GREEN)
+    TRIPLE_ZERO     = ("000", 0,  RouletteColor.GREEN)
+    
     ONE             = ("1",  1,  RouletteColor.RED)
     TWO             = ("2",  2,  RouletteColor.BLACK)
     THREE           = ("3",  3,  RouletteColor.RED)
@@ -46,10 +54,23 @@ class RouletteNumber(Enum):
     THIRTY_FIVE     = ("35", 35, RouletteColor.BLACK)
     THIRTY_SIX      = ("36", 36, RouletteColor.RED)
 
-    def __init__(self, label, numeric_value, color):
+    def __init__(self, label, numeric_value, color) -> None:
         self.label = label
         self.numeric_value = numeric_value
         self.color = color
+
+    def __str__(self) -> str:
+        return self.label
+
+    def __lt__(self, other) -> bool:
+        if isinstance(other, RouletteNumber):
+            return self.numeric_value < other.numeric_value
+        return NotImplemented
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, RouletteNumber):
+            return self.numeric_value == other.numeric_value
+        return NotImplemented
 
     def is_red(self) -> bool:
         """Determines if the roulette number is red."""
@@ -68,16 +89,15 @@ class RouletteNumber(Enum):
         return lower <= self.numeric_value <= upper
 
     def is_even(self) -> bool:
-        """Determines if the number is even. Note that 0 and 00 don't count as even."""
-        return not self.is_zero_or_double_zero() and self.numeric_value % 2 == 0
+        """Determines if the number is even. Note that 0s don't count as even."""
+        return not self.is_zero_value() and self.numeric_value % 2 == 0
 
     def is_odd(self) -> bool:
-        """Determines if the number is odd. Note that 0 and 00 don't count as odd."""
-        return not self.is_zero_or_double_zero() and self.numeric_value % 2 == 1
+        """Determines if the number is odd. Note that 0s don't count as odd."""
+        return not self.is_zero_value() and self.numeric_value % 2 == 1
 
-    def is_zero_or_double_zero(self) -> bool:
-        """Determines if the number is either ZERO or DOUBLE_ZERO."""
-        return self in {RouletteNumber.ZERO, RouletteNumber.DOUBLE_ZERO}
+    def is_zero_value(self) -> bool:
+        return self.numeric_value == 0
 
     @classmethod
     def from_numeric_value(cls, numeric_value: int) -> "RouletteNumber":

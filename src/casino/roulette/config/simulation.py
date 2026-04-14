@@ -1,20 +1,22 @@
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List
 
-from .dealing import DealingConfig
 from .player import PlayerConfig
+from .bets import BetsConfig
 from .rules import RulesConfig
+from .wheel import WheelConfig
 from .limits import LimitsConfig
 
 
 @dataclass(frozen=True)
 class SimulationConfig:
     """
-    Top-level configuration DTO for blackjack simulations.
+    Top-level configuration DTO for roulette simulations.
     """
     title: str
-    dealing: DealingConfig
     players: List[PlayerConfig]
+    wheel: WheelConfig
+    bets: BetsConfig
     rules: RulesConfig
     limits: LimitsConfig
     seed: int | None = None
@@ -32,8 +34,9 @@ class SimulationConfig:
         """
         return cls(
             title=data["title"],
-            dealing=DealingConfig.from_dict(data["dealing"]),
             players=[PlayerConfig.from_dict(player) for player in data["players"]],
+            wheel=WheelConfig.from_dict(data["wheel"]),
+            bets=BetsConfig.from_dict(data["bets"]),
             rules=RulesConfig.from_dict(data["rules"]),
             limits=LimitsConfig.from_dict(data["limits"]),
             seed=data.get("seed"),
